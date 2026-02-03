@@ -3,40 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BI Master Quiz</title>
+    <title>BI Master</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            /* 1. CHANGED: New "Nice" Gradient (Purple to Deep Blue) */
+            --primary-gradient: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --accent-color: #8E2DE2;
+        }
+
+        body {
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            font-family: 'Poppins', 'Noto Sans Sinhala', sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-footer {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: auto;
+            width: 100%;
+            font-size: 0.9rem;
+        }
+
+        .mascot-emoji {
+            font-size: 4.5rem;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        
+        .speech-bubble {
+            background: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            position: relative;
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin-bottom: 15px;
+            min-width: 180px;
+            border: 2px solid var(--accent-color);
+        }
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 8px 8px 0;
+            border-style: solid;
+            border-color: var(--accent-color) transparent transparent transparent;
+        }
+
+        .option-btn {
+            text-align: left;
+            padding: 15px 20px;
+            border: 2px solid transparent;
+            background-color: white;
+            border-radius: 12px;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+            color: #444;
+        }
+        .option-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-color: var(--accent-color);
+        }
+        .option-btn.correct { background-color: #d1e7dd !important; border-color: #198754 !important; color: #0f5132 !important; }
+        .option-btn.wrong { background-color: #f8d7da !important; border-color: #dc3545 !important; color: #842029 !important; opacity: 0.8; }
+        .disabled-option { pointer-events: none; opacity: 0.6; }
+
+        .explanation-hidden { display: none; }
+        .explanation-visible { display: block; background: #f3e5f5; border-left: 5px solid var(--accent-color); }
+        
+        .heart-beat { display: inline-block; color: #ff4757; animation: heartPulse 1.5s infinite; }
+        @keyframes heartPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
+        .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.4); }
+    </style>
 </head>
 <body>
 
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-7 col-lg-6">
+        <div class="col-md-8 col-lg-7">
             
             <div class="text-center mb-3">
                 <div id="mascot" class="mascot-emoji animate__animated">🤖</div>
                 <div id="mascot-bubble" class="speech-bubble animate__animated animate__fadeIn">
-                    Let's do this!
+                    වරෙන් යමු! 🇱🇰
                 </div>
             </div>
 
             <div class="glass-card p-3 mb-4 animate__animated animate__fadeInDown">
                 <div class="row align-items-center">
                     <div class="col-8">
-                        <select id="topic-select" class="form-select border-0 bg-light fw-bold" onchange="filterQuiz()">
-                            <option value="all">📚 All Lessons</option>
-                            </select>
+                        <select id="topic-select" class="form-select border-0 bg-light fw-bold text-primary" onchange="filterQuiz()">
+                            <option value="all">📚 All 130 Questions</option>
+                        </select>
                     </div>
                     <div class="col-4 text-end">
-                         <span class="badge bg-primary rounded-pill fs-6 px-3 py-2">
-                             Score: <span id="score-val">0</span>
-                         </span>
+                         <span class="badge bg-danger rounded-pill fs-6 px-3 py-2 shadow-sm">Score: <span id="score-val">0</span></span>
                     </div>
                 </div>
             </div>
@@ -45,19 +138,14 @@
                 <span class="fw-bold text-shadow">Progress</span>
                 <span class="fw-bold text-shadow">Q: <span id="current-q">1</span>/<span id="total-q">0</span></span>
             </div>
-            <div class="progress mb-4 rounded-pill" style="height: 8px; background: rgba(255,255,255,0.3);">
+            <div class="progress mb-4 rounded-pill shadow-sm" style="height: 10px; background: rgba(255,255,255,0.2);">
                 <div id="progress-bar" class="progress-bar bg-warning rounded-pill" role="progressbar" style="width: 0%; transition: width 0.5s ease;"></div>
             </div>
 
             <div class="card glass-card animate__animated animate__fadeInUp" id="quiz-card">
                 <div class="card-body p-4">
-                    
-                    <h5 class="card-title mb-4 question-text fw-bold" id="question-text">
-                        Loading question...
-                    </h5>
-
-                    <div class="d-grid gap-3" id="options-container">
-                        </div>
+                    <h5 class="card-title mb-4 fw-bold text-dark" id="question-text">Loading...</h5>
+                    <div class="d-grid gap-3" id="options-container"></div>
 
                     <div id="explanation-box" class="mt-4 p-3 rounded explanation-hidden animate__animated">
                         <div class="d-flex align-items-center gap-2 mb-2">
@@ -68,41 +156,372 @@
                     </div>
 
                     <div class="d-flex gap-2 mt-4">
-                        <button id="prev-btn" class="btn btn-glass w-50 d-none fw-bold" onclick="prevQuestion()">
-                             ⬅ Previous
-                        </button>
-                        <button id="next-btn" class="btn btn-action w-50 ms-auto d-none shadow" onclick="nextQuestion()">
-                            Next Question ➜
-                        </button>
-                        
-                        <button id="restart-btn" class="btn btn-action w-100 d-none shadow" onclick="location.reload()">
-                            🔄 Restart Quiz
-                        </button>
+                        <button id="prev-btn" class="btn btn-light border-0 text-secondary w-50 d-none fw-bold" onclick="prevQuestion()">⬅ Previous</button>
+                        <button id="next-btn" class="btn btn-primary w-50 ms-auto d-none shadow" onclick="nextQuestion()">Next Question ➜</button>
+                        <button id="restart-btn" class="btn btn-dark w-100 d-none shadow" onclick="location.reload()">🔄 Try Again</button>
                     </div>
-
                 </div>
             </div>
 
         </div>
     </div>
 </div>
+
 <footer class="glass-footer animate__animated animate__fadeInUp">
     <div class="container">
-        <p class="mb-0 text-shadow">
-            Created with <span class="heart-beat">❤️</span> by <strong>DR Kalupahana</strong>
-        </p>
+        <p class="mb-0 text-shadow">© 2026 | DR Kalupahana | Crafted with purpose, built with <span class="heart-beat">❤️</span></p>
     </div>
 </footer>
 
-
-<style>
-    .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-</style>
-
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-<script src="questions.js"></script>
-<script src="script.js"></script>
+<script>
+// --- SINHALA FUNNY PHRASES ---
+const mascotPhrases = {
+    idle: [
+        "කෝ බලන්න...", "හිතලා ගහපන්...", "මොකක්ද උත්තරේ?", "ටිකක් හිතපන්...", "හදිස්සියක් නෑ..."
+    ],
+    correct: [
+        "අඩෝ පට්ට!", "උඹ නම් වැඩ්ඩෙක්!", "ගැම්මක් තමයි!", "කොහොමද ඒක!", "ජයයි පුතා!", "මූ නම් යකෙක්!", "යෙස් හුත්තෝ යෙස්"
+    ],
+    wrong: [
+        "තෝට පිස්සුද යකෝ?", "මී හරකා!", "අයියෝ, ගොන්නු ඉන්න රටේ මං ඉන්නේ.", "ගොනා උනාට තණ කන්න එපා.", "නිකන් පලයන් යන්න.",
+        "ගොන් හුත්තා", "මෝඩ යකෙක් තෝ", "උඹට මොළයක් නැද්ද යකෝ", "ගිහින් පාඩම් කරපන්", "කාලකන්නියා", "පලයන් හුත්තෝ යන්න", 
+        "පිස්සුද උඹට", "පකක් කරා", "අනේ හුකේ නන්නානේ"
+    ]
+};
 
+// --- DATA: 130 Questions ---
+const quizData = [
+  // --- SET 1 (30 Questions) ---
+  { "id": 1, "topic": "BI Maturity", "question": "In addition to predefined dashboards, what else characterizes Level 2 'Analytical Reporting'?", "options": ["Data science integration", "Trend and performance analysis", "Real-time data", "Manual spreadsheets"], "correctIndex": 1, "explanation": "Level 2 adds trend and performance analysis to dashboards." },
+  { "id": 2, "topic": "BI Maturity", "question": "Which level of BI maturity specifically relies on 'Data science integration'?", "options": ["Level 2: Analytical Reporting", "Level 3: Business Insights", "Level 4: Predictive Analytics", "Level 5: Pervasive BI"], "correctIndex": 2, "explanation": "Predictive Analytics (Level 4) integrates data science." },
+  { "id": 3, "topic": "BI Maturity", "question": "What is the specific consequence of 'Lack of Executive Buy-in' listed in the challenges?", "options": ["Data becomes siloed", "BI may not be prioritized", "Compliance issues arise", "Staff literacy decreases"], "correctIndex": 1, "explanation": "Without buy-in, BI initiatives struggle to get priority or funding." },
+  { "id": 4, "topic": "BI Maturity", "question": "To solve the challenge of 'Low Data Literacy,' organizations should:", "options": ["Adopt a Unified Data Strategy", "Secure Executive Sponsorship", "Invest in Training and Change Management", "Use Scalable BI Platforms"], "correctIndex": 2, "explanation": "Training is the direct solution to low literacy." },
+  { "id": 5, "topic": "BI Maturity", "question": "Which BI maturity level uses real-time data for 'proactive decision-making'?", "options": ["Analytical Reporting", "Business Insights", "Pervasive BI / Strategic BI", "Operational Reporting"], "correctIndex": 2, "explanation": "Pervasive BI (Level 5) uses real-time data proactively." },
+  { "id": 6, "topic": "BI Strategy", "question": "Which of the following is listed as an 'Internal' data source in the BI Framework?", "options": ["Market data", "Social media", "HRMS (Human Resource Management Systems)", "Public government records"], "correctIndex": 2, "explanation": "HRMS is an internal organizational system." },
+  { "id": 7, "topic": "BI Strategy", "question": "Which layer of the BI Framework includes 'OLAP Cubes'?", "options": ["Data Sources", "Data Modeling", "ETL", "Presentation Layer"], "correctIndex": 1, "explanation": "OLAP cubes are part of the Data Modeling layer." },
+  { "id": 8, "topic": "BI Strategy", "question": "The 'Presentation Layer' of the BI Framework is described as:", "options": ["A central repository for unstructured data", "Accessible dashboards and visualizations for end-users", "The process of cleansing data", "The source of internal data"], "correctIndex": 1, "explanation": "The presentation layer is what the end-user sees (dashboards)." },
+  { "id": 9, "topic": "BI Strategy", "question": "What is the specific goal of the 'Customer Insights' implementation target?", "options": ["To ensure accurate reporting for audits", "To reduce IT dependency", "To understand behavior for marketing and service improvement", "To optimize operations"], "correctIndex": 2, "explanation": "It focuses on understanding customer behavior." },
+  { "id": 10, "topic": "BI Strategy", "question": "'Minimizing resistance' is a key outcome of which Critical Success Factor?", "options": ["Scalable Architecture", "Change Management", "Data Governance", "Continuous Improvement"], "correctIndex": 1, "explanation": "Change management handles the human side of adoption." },
+  { "id": 11, "topic": "BI Strategy", "question": "Which implementation target focuses on removing 'IT dependency'?", "options": ["Regulatory Compliance", "Decision Support", "Self-Service BI", "Cost Reduction"], "correctIndex": 2, "explanation": "Self-Service BI removes the bottleneck of IT staff." },
+  { "id": 12, "topic": "BPM", "question": "What is Step 2 in the typical deployment of BPM?", "options": ["Define strategic objectives", "Identify KPIs to measure progress", "Align objectives with departmental goals", "Analyze data and generate insights"], "correctIndex": 1, "explanation": "Step 2 is usually identifying the KPIs to measure the objectives." },
+  { "id": 13, "topic": "BPM", "question": "Which component of BPM 'Support[s] data-driven decision-making'?", "options": ["Strategic Planning", "Forecasting and Budgeting", "Analytical Applications", "Business Modeling"], "correctIndex": 2, "explanation": "Analytical applications provide the insights for decisions." },
+  { "id": 14, "topic": "BPM", "question": "'Profit Margin' is explicitly categorized as which type of KPI?", "options": ["Customer KPI", "Financial KPI", "Internal Process KPI", "Learning & Growth KPI"], "correctIndex": 1, "explanation": "Profit Margin is a financial metric." },
+  { "id": 15, "topic": "BPM", "question": "Which Balanced Scorecard perspective includes 'Market share'?", "options": ["Financial Perspective", "Internal Business Processes", "Customer Perspective", "Learning and Growth"], "correctIndex": 2, "explanation": "Market share relates to customers." },
+  { "id": 16, "topic": "BPM", "question": "What is the specific 'Data Type' typically used in Scorecards?", "options": ["Operational data", "Performance indicators", "Unstructured text", "Real-time streams"], "correctIndex": 1, "explanation": "Scorecards track high-level performance indicators (KPIs)." },
+  { "id": 17, "topic": "BPM", "question": "'Demand prediction' is an example of which type of business analytics?", "options": ["Descriptive Analytics", "Diagnostic Analytics", "Predictive Analytics", "Prescriptive Analytics"], "correctIndex": 2, "explanation": "Prediction = Predictive Analytics." },
+  { "id": 18, "topic": "BPM", "question": "IBM Cognos is categorized in the notes as:", "options": ["A Data Lake", "An Analytics Platform", "A CRM System", "An ETL Tool"], "correctIndex": 1, "explanation": "Cognos is listed as an Analytics Platform." },
+  { "id": 19, "topic": "BPM", "question": "One of the purposes of a performance measurement system is to:", "options": ["Evaluate and reward performance", "Create unstructured data", "Replace strategic planning", "Increase operational costs"], "correctIndex": 0, "explanation": "It provides accountability and a basis for evaluation." },
+  { "id": 20, "topic": "Qualitative Analytics", "question": "Which of the following is listed as an example of 'Unstructured Data'?", "options": ["Customer IDs", "Product prices", "Emails", "Sales records"], "correctIndex": 2, "explanation": "Emails are unstructured text." },
+  { "id": 21, "topic": "Qualitative Analytics", "question": "'Atlas.ti' is mentioned as a tool for which process?", "options": ["Quantitative analysis", "Qualitative interpretation/coding", "SQL database management", "Generating pivot tables"], "correctIndex": 1, "explanation": "Atlas.ti is a famous qualitative analysis tool." },
+  { "id": 22, "topic": "Qualitative Analytics", "question": "Which source evaluation criteria asks: 'Does it align with research objectives?'", "options": ["Authenticity", "Accuracy", "Contextual Relevance", "Bias Detection"], "correctIndex": 2, "explanation": "Relevance ensures the data matters to the goal." },
+  { "id": 23, "topic": "Qualitative Analytics", "question": "'Thematic coding' is a technique used during:", "options": ["Data Storage", "Data Interpretation", "Source Evaluation", "Data Collection"], "correctIndex": 1, "explanation": "Coding is the process of interpreting qualitative data." },
+  { "id": 24, "topic": "Qualitative Analytics", "question": "Which concept involves 'Organizing categories into levels' (e.g., Product -> Features)?", "options": ["Taxonomy", "Hierarchy", "Sentiment Analysis", "Conditional Logic"], "correctIndex": 1, "explanation": "Levels imply a hierarchy." },
+  { "id": 25, "topic": "Qualitative Analytics", "question": "A relationship where 'Factors co-occur' is defined as:", "options": ["Causal", "Temporal", "Correlational", "Hierarchical"], "correctIndex": 2, "explanation": "Co-occurrence = Correlation." },
+  { "id": 26, "topic": "Qualitative Analytics", "question": "Which of the following is an example of a 'Temporal' relationship?", "options": ["One factor causes another", "Factors co-occur", "One event follows another", "Factors are unrelated"], "correctIndex": 2, "explanation": "Temporal refers to time/sequence." },
+  { "id": 27, "topic": "Qualitative Analytics", "question": "What is a specific benefit of using 'Conditional Logic'?", "options": ["It eliminates the need for data", "It enables automated rule-based tagging", "It creates visual concept maps", "It verifies the authenticity of a source"], "correctIndex": 1, "explanation": "If-This-Then-That logic automates tagging." },
+  { "id": 28, "topic": "Qualitative Analytics", "question": "Rule-based Sentiment Analysis relies on:", "options": ["Neural networks", "Word dictionaries", "Manual data entry", "SQL queries"], "correctIndex": 1, "explanation": "Rule-based systems use lexicons (dictionaries)." },
+  { "id": 29, "topic": "Qualitative Analytics", "question": "Which Python library is mentioned for use in Sentiment Analysis?", "options": ["Pandas", "TextBlob", "NumPy", "Matplotlib"], "correctIndex": 1, "explanation": "TextBlob is a common NLP library for sentiment." },
+  { "id": 30, "topic": "Qualitative Analytics", "question": "'Concept maps' are tools used to visualize:", "options": ["Relationships/Influences", "Data cleansing errors", "Structured rows and columns", "Financial KPIs"], "correctIndex": 0, "explanation": "Concept maps show how themes relate." },
+
+  // --- SET 2 (100 Questions) ---
+  // BI Maturity
+  { "id": 31, "topic": "BI Maturity", "question": "According to the levels of BI maturity, which stage involves basic reports from transactional systems?", "options": ["Analytical Reporting", "Operational Reporting", "Business Insights", "Predictive Analytics"], "correctIndex": 1, "explanation": "Operational Reporting (Level 1) uses basic reports." },
+  { "id": 32, "topic": "BI Maturity", "question": "At which level of BI maturity do users begin asking 'why' questions?", "options": ["Level 1: Operational Reporting", "Level 2: Analytical Reporting", "Level 3: Business Insights", "Level 4: Predictive Analytics"], "correctIndex": 2, "explanation": "Level 3 involves deeper analysis ('Why?')." },
+  { "id": 33, "topic": "BI Maturity", "question": "Which level of BI maturity is characterised by the use of predefined dashboards and KPIs?", "options": ["Operational Reporting", "Analytical Reporting", "Pervasive BI", "Predictive Analytics"], "correctIndex": 1, "explanation": "Level 2 uses predefined dashboards." },
+  { "id": 34, "topic": "BI Maturity", "question": "What characterizes the 'Predictive Analytics' level of BI maturity?", "options": ["Manual and spreadsheet-based reporting", "Ad hoc analysis and visualizations", "Use of statistical models and forecasting", "Real-time data for proactive decision-making"], "correctIndex": 2, "explanation": "Level 4 uses models and forecasting." },
+  { "id": 35, "topic": "BI Maturity", "question": "Which level of BI maturity involves BI being embedded across all departments with real-time data?", "options": ["Business Insights", "Predictive Analytics", "Pervasive BI / Strategic BI", "Analytical Reporting"], "correctIndex": 2, "explanation": "Level 5 is Pervasive BI." },
+  { "id": 36, "topic": "BI Maturity", "question": "Which of the following is NOT listed as a factor that impacts BI maturity?", "options": ["Data Quality & Integration", "Technology Infrastructure", "User Skills & Culture", "Competitor Analysis"], "correctIndex": 3, "explanation": "Competitor Analysis is not listed as a direct maturity factor in the notes." },
+  { "id": 37, "topic": "BI Maturity", "question": "How does 'Data Quality & Integration' impact BI maturity?", "options": ["It ensures staff are trained properly", "Incomplete or inconsistent data limits progress", "It determines the availability of modern tools", "It defines the organizational strategy"], "correctIndex": 1, "explanation": "Bad data halts maturity." },
+  { "id": 38, "topic": "BI Maturity", "question": "Which factor involving 'Staff training, data literacy, and openness to change' impacts BI maturity?", "options": ["Technology Infrastructure", "Leadership Support", "User Skills & Culture", "Organizational Strategy Alignment"], "correctIndex": 2, "explanation": "These are human/cultural factors." },
+  { "id": 39, "topic": "BI Maturity", "question": "What does 'Technology Infrastructure' refer to in the context of BI maturity factors?", "options": ["Management commitment", "Availability of modern tools like ETL and data warehouses", "Alignment with business goals", "Staff data literacy"], "correctIndex": 1, "explanation": "Infrastructure refers to the tools and hardware." },
+  { "id": 40, "topic": "BI Maturity", "question": "'Leadership Support' as a factor in BI maturity is defined by:", "options": ["The availability of ETL tools", "Management commitment and investment in BI", "Staff openness to change", "Consistent data reporting"], "correctIndex": 1, "explanation": "Leadership support provides the budget and commitment." },
+  { "id": 41, "topic": "BI Maturity", "question": "Which challenge in achieving Pervasive BI maturity makes it hard to integrate data across departments?", "options": ["Low Data Literacy", "Lack of Executive Buy-in", "Siloed Data Sources", "Poor Data Governance"], "correctIndex": 2, "explanation": "Silos isolate data in departments." },
+  { "id": 42, "topic": "BI Maturity", "question": "What is the consequence of 'Low Data Literacy Among Staff'?", "options": ["It limits adoption and trust in BI tools", "It leads to compliance issues", "It prevents data integration", "It reduces executive buy-in"], "correctIndex": 0, "explanation": "Staff won't trust or use tools they don't understand." },
+  { "id": 43, "topic": "BI Maturity", "question": "'Poor Data Governance' leads to which of the following issues?", "options": ["Hard to integrate across departments", "Limits adoption of tools", "Inconsistent reporting and compliance issues", "Lack of investment in BI"], "correctIndex": 2, "explanation": "Poor governance causes inconsistency." },
+  { "id": 44, "topic": "BI Maturity", "question": "What is a potential solution for the challenge of 'Siloed Data Sources'?", "options": ["Secure Executive Sponsorship", "Adopt a Unified Data Strategy", "Implement Strong Data Governance", "Use Scalable BI Platforms"], "correctIndex": 1, "explanation": "A unified strategy connects silos." },
+  { "id": 45, "topic": "BI Maturity", "question": "To build a data-driven culture, which solution is recommended?", "options": ["Invest in Training and Change Management", "Implement Strong Data Governance", "Use Scalable BI Platforms", "Integrate data via data lakes"], "correctIndex": 0, "explanation": "Training changes culture." },
+  { "id": 46, "topic": "BI Maturity", "question": "How can an organization ensure quality, security, and consistency in BI?", "options": ["By using scalable BI platforms", "By securing executive sponsorship", "By implementing strong data governance", "By adopting a unified data strategy"], "correctIndex": 2, "explanation": "Governance covers quality and security." },
+  { "id": 47, "topic": "BI Maturity", "question": "Which of the following is cited as a scalable BI platform example?", "options": ["Excel", "Tableau", "Python", "SQL"], "correctIndex": 1, "explanation": "Tableau (and Power BI) are scalable platforms." },
+  { "id": 48, "topic": "BI Maturity", "question": "What is necessary to align BI goals with strategic business outcomes?", "options": ["Data Lakes", "Executive Sponsorship", "Data Literacy", "ETL Tools"], "correctIndex": 1, "explanation": "Executives align BI with strategy." },
+  { "id": 49, "topic": "BI Maturity", "question": "What characterizes Level 1 'Operational Reporting'?", "options": ["Predefined dashboards", "Manual and spreadsheet-based methods", "Ad hoc analysis", "Data science integration"], "correctIndex": 1, "explanation": "Level 1 is manual/basic." },
+  { "id": 50, "topic": "BI Maturity", "question": "In Level 3 'Business Insights', what typically happens?", "options": ["Users perform ad hoc analysis and visualizations", "Users rely on basic reports from transactional systems", "Statistical models are primarily used", "BI is embedded in all departments"], "correctIndex": 0, "explanation": "Ad hoc analysis defines Level 3." },
+  
+  // BI Strategy
+  { "id": 51, "topic": "BI Strategy", "question": "A BI strategy outlines how data will be collected, managed, and analyzed to:", "options": ["Reduce IT costs", "Drive decision-making", "Replace human employees", "Create unstructured data"], "correctIndex": 1, "explanation": "The goal is to drive decision-making." },
+  { "id": 52, "topic": "BI Strategy", "question": "What is the primary objective of a BI strategy?", "options": ["To create complex dashboards", "To align BI initiatives with business goals", "To increase data volume", "To eliminate the need for data governance"], "correctIndex": 1, "explanation": "Alignment with business goals is key." },
+  { "id": 53, "topic": "BI Strategy", "question": "Which Critical Success Factor (CSF) ensures alignment with strategic goals and secures necessary resources?", "options": ["Clear Business Objectives", "Data Governance", "Executive Sponsorship", "Skilled Team"], "correctIndex": 2, "explanation": "Executives provide resources and alignment." },
+  { "id": 54, "topic": "BI Strategy", "question": "'Defined KPIs and use cases' fall under which Critical Success Factor?", "options": ["Executive Sponsorship", "Clear Business Objectives", "User Involvement", "Scalable Architecture"], "correctIndex": 1, "explanation": "Objectives define KPIs." },
+  { "id": 55, "topic": "BI Strategy", "question": "What does 'Data Governance' as a CSF involve?", "options": ["Policies and standards for data quality, consistency, and security", "Expertise in data analysis and ETL", "Preparing users for new tools", "Input from business users"], "correctIndex": 0, "explanation": "Governance is about policies and standards." },
+  { "id": 56, "topic": "BI Strategy", "question": "Why is 'User Involvement' a Critical Success Factor?", "options": ["It ensures the BI system meets practical needs", "It secures necessary resources", "It creates policies for data security", "It accommodates growing data volumes"], "correctIndex": 0, "explanation": "Users ensure the system is actually useful." },
+  { "id": 57, "topic": "BI Strategy", "question": "Which CSF involves expertise in data analysis, ETL, and visualization tools?", "options": ["Scalable Architecture", "Skilled Team", "Continuous Improvement", "Change Management"], "correctIndex": 1, "explanation": "A skilled team provides the technical expertise." },
+  { "id": 58, "topic": "BI Strategy", "question": "'Scalable Architecture' ensures that BI systems can:", "options": ["Function without IT dependency", "Accommodate growing data volumes and complexity", "Create policies for data quality", "Secure top management support"], "correctIndex": 1, "explanation": "Scalability deals with growth/volume." },
+  { "id": 59, "topic": "BI Strategy", "question": "What is the purpose of 'Change Management' in BI strategy?", "options": ["To define KPIs", "To prepare users for new tools and minimize resistance", "To cleanse and transform data", "To organize data into OLAP cubes"], "correctIndex": 1, "explanation": "Change management manages user adoption/resistance." },
+  { "id": 60, "topic": "BI Strategy", "question": "Which element of the BI Framework includes internal systems like ERP and CRM?", "options": ["Data Storage", "Data Sources", "Data Modeling", "Presentation Layer"], "correctIndex": 1, "explanation": "ERP/CRM are Source Systems." },
+  { "id": 61, "topic": "BI Strategy", "question": "What process involves cleansing, transforming, and loading data into data warehouses?", "options": ["OLAP", "ETL", "Data Modeling", "Data Mining"], "correctIndex": 1, "explanation": "ETL." },
+  { "id": 62, "topic": "BI Strategy", "question": "In the BI Framework, what serves as a central repository for structured/unstructured data?", "options": ["Data Sources", "Data Warehouse/Data Lake", "OLAP Cubes", "Presentation Layer"], "correctIndex": 1, "explanation": "Warehouse/Lake." },
+  { "id": 63, "topic": "BI Strategy", "question": "Star and Snowflake Schemas are examples of:", "options": ["Data Sources", "Data Modeling", "ETL Processes", "BI Tools"], "correctIndex": 1, "explanation": "These are schema modeling techniques." },
+  { "id": 64, "topic": "BI Strategy", "question": "Which layer of the BI Framework involves accessible dashboards for end-users?", "options": ["Data Storage", "Presentation Layer", "ETL", "Data Modeling"], "correctIndex": 1, "explanation": "Presentation Layer." },
+  { "id": 65, "topic": "BI Strategy", "question": "Which of the following is a BI Implementation Target focused on 'Clean, reliable, and timely data'?", "options": ["Enhanced Reporting", "Data Accuracy & Quality", "Cost Reduction", "Customer Insights"], "correctIndex": 1, "explanation": "Data Accuracy & Quality." },
+  { "id": 66, "topic": "BI Strategy", "question": "'Identifying inefficiencies and optimizing operations' describes which BI Implementation Target?", "options": ["Decision Support", "Cost Reduction", "Regulatory Compliance", "Self-Service BI"], "correctIndex": 1, "explanation": "Cost Reduction." },
+  { "id": 67, "topic": "BI Strategy", "question": "Which target aims to empower users with access to data without IT dependency?", "options": ["Regulatory Compliance", "Self-Service BI", "Decision Support", "Enhanced Reporting"], "correctIndex": 1, "explanation": "Self-Service BI." },
+  { "id": 68, "topic": "BI Strategy", "question": "Ensuring accurate reporting for audit purposes falls under:", "options": ["Customer Insights", "Regulatory Compliance", "Cost Reduction", "Decision Support"], "correctIndex": 1, "explanation": "Regulatory Compliance." },
+  { "id": 69, "topic": "BI Strategy", "question": "Market data and social media are examples of:", "options": ["Internal Data Sources", "External Data Sources", "Data Models", "ETL Tools"], "correctIndex": 1, "explanation": "External Sources." },
+  { "id": 70, "topic": "BI Strategy", "question": "Continuous Improvement involves:", "options": ["Regular performance reviews and iterative development", "Defining initial KPIs", "Collecting data from ERP systems", "Securing initial executive sponsorship"], "correctIndex": 0, "explanation": "Iterative development." },
+  
+  // BPM
+  { "id": 71, "topic": "BPM", "question": "Which component of BPM sets long-term goals and vision?", "options": ["Performance Measurement", "Strategic Planning", "Business Modeling", "Forecasting"], "correctIndex": 1, "explanation": "Strategic Planning sets the vision." },
+  { "id": 72, "topic": "BPM", "question": "Which BPM component tracks outcomes with metrics and KPIs?", "options": ["Strategic Planning", "Performance Measurement", "Business Modeling", "Analytical Applications"], "correctIndex": 1, "explanation": "Performance Measurement." },
+  { "id": 73, "topic": "BPM", "question": "Simulating scenarios and resource allocation is part of which BPM component?", "options": ["Business Modeling", "Monitoring and Reporting", "Forecasting and Budgeting", "Performance Measurement"], "correctIndex": 0, "explanation": "Business Modeling." },
+  { "id": 74, "topic": "BPM", "question": "What provides feedback loops via dashboards and scorecards?", "options": ["Strategic Planning", "Monitoring and Reporting", "Forecasting and Budgeting", "Business Modeling"], "correctIndex": 1, "explanation": "Monitoring and Reporting." },
+  { "id": 75, "topic": "BPM", "question": "What is Step 1 in how organizations typically deploy BPM?", "options": ["Identify KPIs", "Define strategic objectives", "Use dashboards", "Analyze data"], "correctIndex": 1, "explanation": "Step 1: Define strategy." },
+  { "id": 76, "topic": "BPM", "question": "Which step follows 'Identify KPIs to measure progress' in BPM deployment?", "options": ["Define strategic objectives", "Use dashboards/scorecards to track real-time data", "Align objectives with departmental goals", "Take corrective actions"], "correctIndex": 2, "explanation": "After KPIs, you align objectives." },
+  { "id": 77, "topic": "BPM", "question": "Which of the following is NOT a purpose of a performance measurement system?", "options": ["Monitor progress toward goals", "Provide accountability", "Eliminate all operational costs", "Enable data-driven decision-making"], "correctIndex": 2, "explanation": "Eliminating ALL costs is impossible." },
+  { "id": 78, "topic": "BPM", "question": "ROI and Revenue Growth are examples of which type of KPI?", "options": ["Customer KPI", "Financial KPI", "Internal Process KPI", "Learning & Growth KPI"], "correctIndex": 1, "explanation": "Financial KPI." },
+  { "id": 79, "topic": "BPM", "question": "Customer Retention is an example of a:", "options": ["Financial KPI", "Customer KPI", "Internal Process KPI", "Learning & Growth KPI"], "correctIndex": 1, "explanation": "Customer KPI." },
+  { "id": 80, "topic": "BPM", "question": "Cycle Time and Efficiency Ratios are examples of:", "options": ["Customer KPIs", "Internal Process KPIs", "Learning & Growth KPIs", "Financial KPIs"], "correctIndex": 1, "explanation": "Internal Process KPIs." },
+  { "id": 81, "topic": "BPM", "question": "Employee Training Hours and Turnover Rate fall under which KPI category?", "options": ["Financial", "Learning & Growth", "Customer", "Internal Process"], "correctIndex": 1, "explanation": "Learning & Growth." },
+  { "id": 82, "topic": "BPM", "question": "What does the 'S' in SMART KPIs stand for?", "options": ["Simple", "Specific", "Strategic", "Sustainable"], "correctIndex": 1, "explanation": "Specific." },
+  { "id": 83, "topic": "BPM", "question": "Which perspective of the Balanced Scorecard focuses on profitability and cost control?", "options": ["Customer Perspective", "Financial Perspective", "Internal Business Processes", "Learning and Growth"], "correctIndex": 1, "explanation": "Financial Perspective." },
+  { "id": 84, "topic": "BPM", "question": "Innovation and operational efficiency belong to which Balanced Scorecard perspective?", "options": ["Financial Perspective", "Internal Business Processes", "Customer Perspective", "Learning and Growth"], "correctIndex": 1, "explanation": "Internal Business Processes." },
+  { "id": 85, "topic": "BPM", "question": "What is the focus of a Dashboard compared to a Scorecard?", "options": ["Strategic goal tracking", "Real-time monitoring", "Long-term planning", "Executive management"], "correctIndex": 1, "explanation": "Real-time monitoring." },
+  { "id": 86, "topic": "BPM", "question": "What is the typical time frame for a Scorecard?", "options": ["Short-term", "Real-time", "Long-term", "Daily"], "correctIndex": 2, "explanation": "Long-term." },
+  { "id": 87, "topic": "BPM", "question": "Who is the primary audience for Dashboards?", "options": ["Executives", "Operational staff", "External auditors", "Investors"], "correctIndex": 1, "explanation": "Operational staff." },
+  { "id": 88, "topic": "BPM", "question": "Visual Analytics is described as enabling:", "options": ["Slower decision making", "Faster insights through charts and maps", "Manual data entry", "Structured text analysis only"], "correctIndex": 1, "explanation": "Faster insights via visuals." },
+  { "id": 89, "topic": "BPM", "question": "Which type of analytics answers 'Why sales dropped'?", "options": ["Descriptive Analytics", "Diagnostic Analytics", "Predictive Analytics", "Prescriptive Analytics"], "correctIndex": 1, "explanation": "Diagnostic (Why?)." },
+  { "id": 90, "topic": "BPM", "question": "Forecasting using ML models is an example of:", "options": ["Descriptive Analytics", "Predictive Analytics", "Diagnostic Analytics", "Prescriptive Analytics"], "correctIndex": 1, "explanation": "Predictive." },
+  { "id": 91, "topic": "BPM", "question": "Recommending actions, such as price optimization, is known as:", "options": ["Descriptive Analytics", "Prescriptive Analytics", "Diagnostic Analytics", "Predictive Analytics"], "correctIndex": 1, "explanation": "Prescriptive (What to do)." },
+  { "id": 92, "topic": "BPM", "question": "Which tool is listed as an Analytics Platform?", "options": ["Excel", "SAS", "Power BI", "Tableau"], "correctIndex": 1, "explanation": "SAS (Power BI/Tableau are listed as BI Tools in the notes)." },
+  { "id": 93, "topic": "BPM", "question": "'Summary reports (e.g., sales history)' are an example of:", "options": ["Descriptive Analytics", "Diagnostic Analytics", "Predictive Analytics", "Prescriptive Analytics"], "correctIndex": 0, "explanation": "Descriptive." },
+  { "id": 94, "topic": "BPM", "question": "Business Analytics (BA) applies statistical methods to:", "options": ["Create data silos", "Interpret data", "Collect manual reports", "Ignore patterns"], "correctIndex": 1, "explanation": "Interpret data." },
+  { "id": 95, "topic": "BPM", "question": "Which Balanced Scorecard perspective includes 'Employee skills, technology use, culture'?", "options": ["Financial", "Customer", "Internal Business Processes", "Learning and Growth"], "correctIndex": 3, "explanation": "Learning and Growth." },
+  
+  // Qualitative Analytics
+  { "id": 96, "topic": "Qualitative Analytics", "question": "Qualitative analytics refers to methods used to analyze:", "options": ["Rows and columns", "Non-numeric data such as text, audio, images", "Structured databases", "Sales figures only"], "correctIndex": 1, "explanation": "Non-numeric data." },
+  { "id": 97, "topic": "Qualitative Analytics", "question": "What is a primary purpose of qualitative analytics?", "options": ["To calculate total revenue", "To understand human behavior, intent, and social patterns", "To store data in relational databases", "To perform basic arithmetic operations"], "correctIndex": 1, "explanation": "Understanding behavior/intent." },
+  { "id": 98, "topic": "Qualitative Analytics", "question": "Which of the following is a common source of qualitative data?", "options": ["Sales records", "Product prices", "Interview transcripts", "Customer IDs"], "correctIndex": 2, "explanation": "Interview transcripts." },
+  { "id": 99, "topic": "Qualitative Analytics", "question": "Structured data is organized in:", "options": ["Audio files", "Rows & columns", "Social media comments", "Email bodies"], "correctIndex": 1, "explanation": "Rows & columns." },
+  { "id": 100, "topic": "Qualitative Analytics", "question": "Which of the following is an example of structured data?", "options": ["Social media posts", "Sales records", "Video content", "Support tickets"], "correctIndex": 1, "explanation": "Sales records." },
+  { "id": 101, "topic": "Qualitative Analytics", "question": "Unstructured data is characterized by:", "options": ["Being easily searchable in relational databases", "Having no predefined format or structure", "Being strictly numeric", "Being organized in rows and columns"], "correctIndex": 1, "explanation": "No predefined format." },
+  { "id": 102, "topic": "Qualitative Analytics", "question": "Most human-generated data is:", "options": ["Structured", "Unstructured", "Numeric", "Tabular"], "correctIndex": 1, "explanation": "Unstructured." },
+  { "id": 103, "topic": "Qualitative Analytics", "question": "In source evaluation, 'Authenticity' asks:", "options": ["Are facts verifiable?", "Is the source original and trustworthy?", "Does it align with research objectives?", "Is there an emotional slant?"], "correctIndex": 1, "explanation": "Original and trustworthy." },
+  { "id": 104, "topic": "Qualitative Analytics", "question": "Which source evaluation criteria asks 'Is there emotional, cultural, or political slant?'", "options": ["Accuracy", "Bias Detection", "Contextual Relevance", "Authenticity"], "correctIndex": 1, "explanation": "Bias Detection." },
+  { "id": 105, "topic": "Qualitative Analytics", "question": "'Accuracy' in source evaluation refers to:", "options": ["Trustworthiness of the source", "Whether facts are verifiable", "Alignment with research objectives", "Presence of bias"], "correctIndex": 1, "explanation": "Verifiable facts." },
+  { "id": 106, "topic": "Qualitative Analytics", "question": "Which of the following is a step in data cleansing for qualitative analytics?", "options": ["Creating pivot tables", "Removing irrelevant content like headers and ads", "Calculating the mean and median", "Storing data in a data warehouse"], "correctIndex": 1, "explanation": "Removing noise." },
+  { "id": 107, "topic": "Qualitative Analytics", "question": "What does 'Normalizing text' involve?", "options": ["Converting audio to video", "Lowercasing and removing punctuation", "Translating languages", "Increasing word count"], "correctIndex": 1, "explanation": "Standardization." },
+  { "id": 108, "topic": "Qualitative Analytics", "question": "'Keyword spotting' is a technique used for:", "options": ["Data Cleansing", "Interpretation", "Source Evaluation", "Data Storage"], "correctIndex": 1, "explanation": "Interpretation." },
+  { "id": 109, "topic": "Qualitative Analytics", "question": "Which software is mentioned as a tool for qualitative interpretation?", "options": ["NVivo", "SQL Server", "Oracle DB", "GitHub"], "correctIndex": 0, "explanation": "NVivo." },
+  { "id": 110, "topic": "Qualitative Analytics", "question": "What does 'Categorization' involve in qualitative analytics?", "options": ["Grouping data into themes or labels", "Organizing categories into levels", "Defining concepts and relationships", "Determining emotional tone"], "correctIndex": 0, "explanation": "Grouping themes." },
+  { "id": 111, "topic": "Qualitative Analytics", "question": "'Organizing categories into levels (e.g., Product -> Features -> Battery Life)' is an example of:", "options": ["Taxonomy", "Hierarchy", "Ontology", "Sentiment Analysis"], "correctIndex": 1, "explanation": "Hierarchy." },
+  { "id": 112, "topic": "Qualitative Analytics", "question": "A 'Systematic classification of related terms' is called:", "options": ["Hierarchy", "Taxonomy", "Sentiment Analysis", "Conditional Logic"], "correctIndex": 1, "explanation": "Taxonomy." },
+  { "id": 113, "topic": "Qualitative Analytics", "question": "Richer structures that define concepts and their relationships in a domain are called:", "options": ["Taxonomies", "Ontologies", "Hierarchies", "Categories"], "correctIndex": 1, "explanation": "Ontologies." },
+  { "id": 114, "topic": "Qualitative Analytics", "question": "The example 'Healthcare Ontology -> Disease -> Diabetes -> Type 1' illustrates:", "options": ["Conditional Logic", "Ontology", "Sentiment Analysis", "Data Cleansing"], "correctIndex": 1, "explanation": "Ontology." },
+  { "id": 115, "topic": "Qualitative Analytics", "question": "Which type of relationship indicates that 'One factor causes another'?", "options": ["Correlational", "Causal", "Temporal", "Hierarchical"], "correctIndex": 1, "explanation": "Causal." },
+  { "id": 116, "topic": "Qualitative Analytics", "question": "A 'Temporal' relationship means:", "options": ["Factors co-occur", "One event follows another", "One factor causes another", "Factors are unrelated"], "correctIndex": 1, "explanation": "Event sequence." },
+  { "id": 117, "topic": "Qualitative Analytics", "question": "Which tool is used to visualize relationships/influences?", "options": ["Concept maps", "Spreadsheets", "Relational databases", "Bar charts"], "correctIndex": 0, "explanation": "Concept maps." },
+  { "id": 118, "topic": "Qualitative Analytics", "question": "'If customer mentions delay -> Then assign to shipping issue' is an example of:", "options": ["Sentiment Analysis", "Conditional Logic", "Taxonomy", "Source Evaluation"], "correctIndex": 1, "explanation": "Conditional Logic." },
+  { "id": 119, "topic": "Qualitative Analytics", "question": "What is a benefit of using Conditional Logic?", "options": ["It removes all bias from data", "It enables automated rule-based tagging", "It creates structured data from scratch", "It replaces the need for software"], "correctIndex": 1, "explanation": "Automated tagging." },
+  { "id": 120, "topic": "Qualitative Analytics", "question": "Sentiment Analysis determines:", "options": ["The accuracy of the source", "The emotional tone in text", "The hierarchy of terms", "The causal relationship between factors"], "correctIndex": 1, "explanation": "Emotional tone." },
+  { "id": 121, "topic": "Qualitative Analytics", "question": "Which of the following is a method for Sentiment Analysis?", "options": ["Rule-based (using word dictionaries)", "ETL processing", "Data warehousing", "Concept mapping"], "correctIndex": 0, "explanation": "Rule-based." },
+  { "id": 122, "topic": "Qualitative Analytics", "question": "Which tool is explicitly mentioned for Sentiment Analysis?", "options": ["Tableau", "MonkeyLearn", "Excel", "SAP"], "correctIndex": 1, "explanation": "MonkeyLearn." },
+  { "id": 123, "topic": "Qualitative Analytics", "question": "Sentiment Analysis is commonly applied to:", "options": ["Financial audits", "Social media monitoring", "Inventory management", "Payroll processing"], "correctIndex": 1, "explanation": "Social media." },
+  { "id": 124, "topic": "Qualitative Analytics", "question": "What distinguishes qualitative analytics from quantitative analytics regarding data type?", "options": ["Qualitative uses numbers; quantitative uses text", "Qualitative uses unstructured text/media; quantitative uses structured numbers", "Qualitative uses databases; quantitative uses interviews", "There is no difference"], "correctIndex": 1, "explanation": "Unstructured vs Structured." },
+  { "id": 125, "topic": "Qualitative Analytics", "question": "Correcting typos (e.g., 'u' -> 'you') is part of which process?", "options": ["Source Evaluation", "Data Cleansing", "Taxonomy creation", "Conditional Logic"], "correctIndex": 1, "explanation": "Data Cleansing." },
+  { "id": 126, "topic": "Qualitative Analytics", "question": "'Contextual Relevance' in source evaluation checks:", "options": ["If the source is original", "If it aligns with research objectives", "If facts are verifiable", "If there is a political slant"], "correctIndex": 1, "explanation": "Research alignment." },
+  { "id": 127, "topic": "Qualitative Analytics", "question": "Which analytic technique helps uncover 'context, emotion, and intent'?", "options": ["Quantitative Analytics", "Qualitative Analytics", "Operational Reporting", "ETL"], "correctIndex": 1, "explanation": "Qualitative." },
+  { "id": 128, "topic": "Qualitative Analytics", "question": "'Mixed sentiment flag' when a review includes 'but' is an application of:", "options": ["Hierarchy", "Conditional Logic", "Data Cleansing", "Taxonomy"], "correctIndex": 1, "explanation": "Conditional Logic." },
+  { "id": 129, "topic": "Qualitative Analytics", "question": "Which of the following is a 'Relationship/Influence' tool?", "options": ["Network diagrams", "Data lakes", "KPI dashboards", "SQL queries"], "correctIndex": 0, "explanation": "Network diagrams." },
+  { "id": 130, "topic": "Qualitative Analytics", "question": "Machine learning in Sentiment Analysis uses training data to:", "options": ["Learn tone", "Create hierarchies", "Remove punctuation", "Verify facts"], "correctIndex": 0, "explanation": "Learn tone." }
+];
+
+// --- LOGIC ---
+let currentQuestionIndex = 0;
+let score = 0;
+let filteredQuestions = [];
+let userHistory = {}; 
+
+document.addEventListener('DOMContentLoaded', () => {
+    setupFilterUI();
+    filterQuiz();
+});
+
+function setupFilterUI() {
+    const select = document.getElementById('topic-select');
+    select.innerHTML = '<option value="all">📚 All 130 Questions</option>';
+    
+    // Extract unique topics from data
+    const topics = [...new Set(quizData.map(q => q.topic))];
+    topics.forEach(t => {
+        const option = document.createElement('option');
+        option.value = t;
+        option.innerText = t;
+        select.appendChild(option);
+    });
+}
+
+function filterQuiz() {
+    const select = document.getElementById('topic-select');
+    const selectedTopic = select.value;
+    
+    if (selectedTopic === 'all') {
+        filteredQuestions = [...quizData];
+    } else {
+        filteredQuestions = quizData.filter(q => q.topic === selectedTopic);
+    }
+    
+    // Shuffle
+    filteredQuestions.sort(() => Math.random() - 0.5);
+    
+    // Reset Game
+    currentQuestionIndex = 0;
+    score = 0;
+    userHistory = {};
+    updateScoreUI();
+    
+    document.getElementById('total-q').innerText = filteredQuestions.length;
+    document.getElementById('restart-btn').classList.add('d-none');
+    document.getElementById('next-btn').classList.add('d-none');
+    
+    updateMascot('idle');
+    loadQuestion();
+}
+
+function loadQuestion() {
+    if (filteredQuestions.length === 0) {
+        document.getElementById('question-text').innerText = "No questions found!";
+        return;
+    }
+    if (currentQuestionIndex >= filteredQuestions.length) {
+        showEndScreen();
+        return;
+    }
+
+    const currentQ = filteredQuestions[currentQuestionIndex];
+    document.getElementById('current-q').innerText = currentQuestionIndex + 1;
+    document.getElementById('progress-bar').style.width = `${((currentQuestionIndex) / filteredQuestions.length) * 100}%`;
+
+    const qText = document.getElementById('question-text');
+    qText.innerText = currentQ.question;
+    qText.classList.remove('animate__fadeIn');
+    void qText.offsetWidth; 
+    qText.classList.add('animate__fadeIn');
+    
+    const optionsContainer = document.getElementById('options-container');
+    optionsContainer.innerHTML = '';
+    const explanationBox = document.getElementById('explanation-box');
+    explanationBox.classList.remove('explanation-visible');
+    explanationBox.classList.add('explanation-hidden');
+    
+    document.getElementById('next-btn').classList.add('d-none');
+    const prevBtn = document.getElementById('prev-btn');
+    if (currentQuestionIndex > 0) prevBtn.classList.remove('d-none');
+    else prevBtn.classList.add('d-none');
+
+    updateMascot('idle');
+
+    currentQ.options.forEach((opt, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'btn option-btn';
+        btn.innerText = opt;
+        
+        if (userHistory[currentQuestionIndex] !== undefined) {
+             const savedIndex = userHistory[currentQuestionIndex];
+             btn.classList.add('disabled-option');
+             if (index === savedIndex) btn.classList.add(savedIndex === currentQ.correctIndex ? 'correct' : 'wrong');
+             if (index === currentQ.correctIndex && savedIndex !== currentQ.correctIndex) btn.classList.add('correct');
+             setTimeout(() => revealExplanation(savedIndex === currentQ.correctIndex, currentQ), 50);
+        } else {
+            btn.onclick = () => handleAnswer(index, currentQ.correctIndex, currentQ, btn);
+        }
+        optionsContainer.appendChild(btn);
+    });
+}
+
+function handleAnswer(selectedIndex, correctIndex, currentQ, btn) {
+    userHistory[currentQuestionIndex] = selectedIndex;
+    const allBtns = document.querySelectorAll('.option-btn');
+    allBtns.forEach(b => b.classList.add('disabled-option'));
+
+    const isCorrect = selectedIndex === correctIndex;
+    if (isCorrect) {
+        btn.classList.add('correct');
+        score++;
+        updateScoreUI();
+        if(typeof confetti === "function") confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        updateMascot('correct');
+    } else {
+        btn.classList.add('wrong');
+        allBtns[correctIndex].classList.add('correct');
+        const card = document.getElementById('quiz-card');
+        card.classList.add('animate__headShake');
+        setTimeout(() => card.classList.remove('animate__headShake'), 500);
+        updateMascot('wrong');
+    }
+    revealExplanation(isCorrect, currentQ);
+}
+
+function revealExplanation(isCorrect, currentQ) {
+    const box = document.getElementById('explanation-box');
+    const header = document.getElementById('result-header');
+    const text = document.getElementById('explanation-text');
+    const icon = document.getElementById('result-icon');
+
+    box.classList.remove('explanation-hidden');
+    box.classList.add('explanation-visible', 'animate__fadeInUp');
+
+    if (isCorrect) {
+        header.innerText = "Correct!";
+        header.className = "text-success fw-bold";
+        icon.innerText = "✅";
+    } else {
+        header.innerText = "Incorrect";
+        header.className = "text-danger fw-bold";
+        icon.innerText = "❌";
+    }
+    text.innerText = currentQ.explanation;
+    document.getElementById('next-btn').classList.remove('d-none');
+}
+
+function updateMascot(mood) {
+    const mascot = document.getElementById('mascot');
+    const bubble = document.getElementById('mascot-bubble');
+    let emoji = "🤖";
+    let text = "";
+    const getPhrase = (key) => mascotPhrases[key][Math.floor(Math.random() * mascotPhrases[key].length)];
+
+    if (mood === 'idle') { emoji = "🤔"; text = getPhrase('idle'); mascot.classList.remove('animate__bounce', 'animate__wobble'); }
+    else if (mood === 'correct') { emoji = "😎"; text = getPhrase('correct'); mascot.classList.add('animate__bounce'); }
+    else if (mood === 'wrong') { emoji = "😵"; text = getPhrase('wrong'); mascot.classList.add('animate__wobble'); }
+
+    mascot.innerText = emoji;
+    bubble.innerText = text;
+    bubble.classList.remove('animate__fadeIn');
+    void bubble.offsetWidth;
+    bubble.classList.add('animate__fadeIn');
+}
+
+function nextQuestion() { currentQuestionIndex++; loadQuestion(); }
+function prevQuestion() { if (currentQuestionIndex > 0) { currentQuestionIndex--; loadQuestion(); } }
+function updateScoreUI() { 
+    const scoreEl = document.getElementById('score-val');
+    scoreEl.innerText = score;
+    scoreEl.classList.add('animate__heartBeat');
+    setTimeout(() => scoreEl.classList.remove('animate__heartBeat'), 500);
+}
+function showEndScreen() {
+    document.getElementById('quiz-card').innerHTML = `
+        <div class="text-center p-5">
+            <div class="display-1 mb-3">🏆</div>
+            <h2 class="mb-3">Quiz Complete!</h2>
+            <p class="fs-4">You scored <strong>${score}</strong> out of <strong>${filteredQuestions.length}</strong></p>
+            <div class="mt-4"><button class="btn btn-dark btn-lg shadow" onclick="location.reload()">Back to Menu</button></div>
+        </div>
+    `;
+    updateMascot('correct');
+    document.getElementById('mascot-bubble').innerText = "ගැම්මක් හුත්තෝ!";
+    if(typeof confetti === "function") confetti({ particleCount: 150, spread: 100 });
+}
+</script>
 </body>
 </html>
